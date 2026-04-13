@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Suspense } from "react";
 import { Provider } from 'jotai'
 import { TRPCReactProvider } from "@/trpc/client";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 import "./globals.css";
@@ -31,18 +33,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", inter.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", inter.variable)}>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TRPCReactProvider>
-          <NuqsAdapter>
-            <Provider>
-              {children}
-              <Toaster />
-            </Provider>
-          </NuqsAdapter>
-        </TRPCReactProvider>
+        <Suspense fallback={null}>
+          <TRPCReactProvider>
+            <NuqsAdapter>
+              <TooltipProvider>
+                <Provider>
+                  {children}
+                  <Toaster />
+                </Provider>
+              </TooltipProvider>
+            </NuqsAdapter>
+          </TRPCReactProvider>
+        </Suspense>
       </body>
     </html>
   );
