@@ -4,6 +4,11 @@ import { checkout, portal, polar } from "@polar-sh/better-auth";
 import prisma from "@/lib/db";
 import { polarClient } from "./polar";
 
+// Validate required environment variables
+if (!process.env.POLAR_SUCCESS_URL) {
+  throw new Error("POLAR_SUCCESS_URL environment variable is required");
+}
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
